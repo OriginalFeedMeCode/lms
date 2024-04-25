@@ -1,7 +1,9 @@
 package com.leadnile.organization.util;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,9 +51,24 @@ public interface ValidatorUtil {
 		return flagValid;
 	}
 
-	static boolean isValid(final Object value) {
-		return value != null;
-	}
+static boolean isValid(final Object value) {
+    // If the object is null, it's not valid
+    if (value == null) {
+        return false;
+    }
+
+    if (value instanceof String) {
+        return !((String) value).isEmpty();
+    }
+
+    if (value instanceof Collection) {
+        return !((Collection<?>) value).isEmpty();
+    }
+    if (value instanceof Map) {
+        return !((Map<?, ?>) value).isEmpty();
+    }
+    return true;
+}
 	static boolean isValid(final double value) {
 		return value > 0;
 	}
