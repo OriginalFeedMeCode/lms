@@ -35,10 +35,9 @@ public class UserUtil {
 
             JSONObject data = new JSONObject(decryptRequest);
 
-
-
             String name = data.optString("fName");
-            String email = data.optString("email");
+            String email = data.optString("email").toLowerCase().trim();
+            String phoneNumber = data.optString("pNumber").trim();
             String password = data.optString("password");
             Integer roleId = data.optInt("roleId");
             Integer doctorId;
@@ -47,7 +46,25 @@ public class UserUtil {
 
             if (roleId == RoleConstant.ROLE_PATIENT){
                 doctorId = data.optInt("doctorId");
+                if (!ValidatorUtil.isValid(doctorId)){
+                    response.put("status", "failed");
+                    response.put("message", "Bad Request");
+                    return ResponseUtil.createBadRequestResponse(response.toString());
+                }
+                User alreadyUser = userService.getExistingUser(phoneNumber, doctorId);
+                if (ValidatorUtil.isValid(alreadyUser)){
+                    response.put("status", "failed");
+                    response.put("message", "Patient Already Exists");
+                    return ResponseUtil.createBadRequestResponse(response.toString());
+                }
                 user.setDoctorId(doctorId);
+            }else if (roleId == RoleConstant.ROLE_DOCTOR){
+                User alreadyUser = userService.getExistingUser(email, RoleConstant.ROLE_DOCTOR);
+                if (ValidatorUtil.isValid(alreadyUser)){
+                    response.put("status", "failed");
+                    response.put("message", "Doctor Already Exists");
+                    return ResponseUtil.createOkResponse(response.toString());
+                }
             }
             
             user.setRoleId(roleId);
@@ -75,7 +92,7 @@ public class UserUtil {
                 response.put("message", "required fields are empty");
                 return ResponseUtil.createBadRequestResponse(response.toString());
             }
-            
+
             response.put("status", "success");
             response.put("message", "User Created Successfully");
             return ResponseUtil.createOkResponse(response.toString());

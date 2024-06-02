@@ -16,5 +16,6 @@ public class DoctorsServiceImpl implements DoctorsService {
     public Doctors createDoctor(Doctors doctors) {
        return doctorsDao.save(doctors);
     }
+
     
 }

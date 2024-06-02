@@ -8,5 +8,4 @@ import com.leadnile.organization.entity.Doctors;
 @Repository
 public interface DoctorsDao extends JpaRepository<Doctors, Integer>   {
 
-    
 }
