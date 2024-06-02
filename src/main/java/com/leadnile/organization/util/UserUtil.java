@@ -39,6 +39,9 @@ public class UserUtil {
             String email = data.optString("email").toLowerCase().trim();
             String phoneNumber = data.optString("pNumber").trim();
             String password = data.optString("password");
+            if (ValidatorUtil.isValid(password)){
+                password = CipherUtil.encrypt(password);
+            }
             Integer roleId = data.optInt("roleId");
             Integer doctorId;
 
