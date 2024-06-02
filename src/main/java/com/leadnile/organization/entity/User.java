@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USER")
+@Table(name = "USERS")
 public class User {
 
     @Id
@@ -23,8 +23,11 @@ public class User {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "ORGANISATION_ID")
-    private Integer organisationId;
+    @Column(name = "ROLE_ID")
+    private Integer roleId;
+
+    @Column(name = "DOCTOR_ID")
+    private Integer doctorId;
 
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -37,9 +40,6 @@ public class User {
 
     @Column(name = "EMAIL")
     private String email;
-
-    @Column(name = "ORGANISATION_TYPE")
-    private String organisationType;
 
     @Column(name = "PASSWORD")
     private String password;

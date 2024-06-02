@@ -6,25 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 @Data
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USERS")
-public class Users {
+@Table(name = "DOCTORS")
+public class Doctors {
 
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "ID")
+    private Integer id;
 
+    @Column(name = "USER_ID")
+    private Integer userId;
+
+    @Column(name = "ACTIVE")
+    private String active;
+
+    @Column(name = "DELETED")
+    private String deleted;
 }

@@ -1,11 +1,10 @@
 package com.leadnile.organization.service;
 
-import org.springframework.http.ResponseEntity;
+import com.leadnile.organization.entity.User;
 
 public interface UserService {
 
-    public ResponseEntity<String> createUser(String request);
+    public User createUser(User user);
 
-    public ResponseEntity<String> getUser(String request);
     
 }

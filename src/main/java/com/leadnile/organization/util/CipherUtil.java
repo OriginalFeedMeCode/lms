@@ -8,6 +8,7 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 
 public class CipherUtil {
+    
     private static final String SALT = "Shoaib2000";
 
     public static String encrypt(String value) throws Exception {
