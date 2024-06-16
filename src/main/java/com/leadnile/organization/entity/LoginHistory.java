@@ -30,7 +30,7 @@ public class LoginHistory {
     private Integer doctorId;
 
     @Column(name = "LOGIN_DATE_TIME")
-    private Date loginDateTIme;
+    private Date loginDateTime;
 
     @Column(name = "LOGOUT_DATE_TIME")
     private Date logoutDateTime;
@@ -38,4 +38,3 @@ public class LoginHistory {
     @Column(name = "INFORMATION")
     private String information;
 }
-

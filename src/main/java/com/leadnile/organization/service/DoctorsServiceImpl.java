@@ -9,13 +9,11 @@ import com.leadnile.organization.entity.Doctors;
 @Service
 public class DoctorsServiceImpl implements DoctorsService {
 
-    @Autowired 
+    @Autowired
     private DoctorsDao doctorsDao;
 
     @Override
     public Doctors createDoctor(Doctors doctors) {
-       return doctorsDao.save(doctors);
+        return doctorsDao.save(doctors);
     }
-
-    
 }
