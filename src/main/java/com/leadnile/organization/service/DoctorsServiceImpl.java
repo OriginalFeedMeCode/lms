@@ -16,4 +16,10 @@ public class DoctorsServiceImpl implements DoctorsService {
     public Doctors createDoctor(Doctors doctors) {
         return doctorsDao.save(doctors);
     }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public Doctors getDoctor(Integer doctorId) {
+        return doctorsDao.getById(doctorId);
+    }
 }

@@ -9,7 +9,6 @@ import com.leadnile.organization.entity.User;
 @Service
 public class UserServiceImpl implements UserService {
 
-
     @Autowired
     private UserDao userDao;
 
@@ -29,5 +28,10 @@ public class UserServiceImpl implements UserService {
         return userDao.getExistingDoctor(email, roleId);
     }
 
-    
+    @SuppressWarnings("deprecation")
+    @Override
+    public User getUser(Integer userId) {
+        return userDao.getById(userId);
+    }
+
 }

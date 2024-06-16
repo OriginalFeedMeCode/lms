@@ -4,6 +4,10 @@ import com.leadnile.organization.entity.User;
 
 public interface UserService {
     public User createUser(User user);
+
     public User getExistingUser(String number, Integer doctorId);
+
     public User getExistingDoctor(String email, Integer roleId);
+
+    public User getUser(Integer userId);
 }

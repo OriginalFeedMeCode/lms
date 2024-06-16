@@ -12,9 +12,13 @@ import com.leadnile.organization.entity.LoginHistory;
 import com.leadnile.organization.entity.User;
 import com.leadnile.organization.service.DoctorsService;
 import com.leadnile.organization.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.leadnile.organization.service.LoginService;
 
 @Service
+@Slf4j
 public class UserUtil {
 
     @Autowired
@@ -77,9 +81,14 @@ public class UserUtil {
             user.setDoctorId(doctor.getId());
             userService.createUser(user);
             response.put("status", "success");
-            response.put("message", "User Created Successfully");
+            JSONObject payload = new JSONObject();
+            payload.put("userId", user.getId());
+            payload.put("email", user.getEmail());
+            response.put("payload", cryptionUtil.encodeToBase64(payload.toString()));
+            response.put("message", "Signup Success, Please check your email to verify.");
             return ResponseUtil.createOkResponse(response.toString());
         } catch (Exception e) {
+            log.error("createDoctorUser :", e);
             response.put("status", "failed");
             response.put("message", "Something Went Wrong");
             return ResponseUtil.createInternalServerErrorResponse(response.toString());
@@ -95,8 +104,7 @@ public class UserUtil {
                 response.put("message", "empty request");
                 return ResponseUtil.createBadRequestResponse(response.toString());
             }
-            // JSONObject data = new JSONObject(cryptionUtil.decodeFromBase64(request));
-            JSONObject data = new JSONObject(request);
+            JSONObject data = new JSONObject(cryptionUtil.decodeFromBase64(request));
             String email = data.optString("userEmail");
             String password = data.optString("userCredential");
             User user = userService.getExistingDoctor(email, RoleConstant.ROLE_DOCTOR);
@@ -128,6 +136,7 @@ public class UserUtil {
             response.put("roleId", user.getRoleId());
             return ResponseUtil.createOkResponse(response.toString());
         } catch (Exception e) {
+            log.error("loginDoctor :", e);
             response.put("status", "failed");
             response.put("message", "Something Went Wrong");
             return ResponseUtil.createInternalServerErrorResponse(response.toString());
@@ -142,8 +151,7 @@ public class UserUtil {
                 response.put("message", "empty request");
                 return ResponseUtil.createBadRequestResponse(response.toString());
             }
-            // JSONObject data = new JSONObject(cryptionUtil.decodeFromBase64(request));
-            JSONObject data = new JSONObject(request);
+            JSONObject data = new JSONObject(cryptionUtil.decodeFromBase64(request));
             Integer userId = data.optInt("userId");
             Integer doctorId = data.optInt("doctorId");
             Integer loginId = data.optInt("loginId");
@@ -159,9 +167,49 @@ public class UserUtil {
             response.put("message", "Successfully logout");
             return ResponseUtil.createOkResponse(response.toString());
         } catch (Exception e) {
+            log.error("logoutDoctor :", e);
             response.put("status", "failed");
             response.put("message", "Something Went Wrong");
             return ResponseUtil.createInternalServerErrorResponse(response.toString());
         }
     }
+
+    public ResponseEntity<String> activateAccount(String request) {
+        JSONObject response = new JSONObject();
+        try {
+            if (!ValidatorUtil.isValid(request)) {
+                response.put("status", "failed");
+                response.put("message", "empty request");
+                return ResponseUtil.createBadRequestResponse(response.toString());
+            }
+            JSONObject data = new JSONObject(cryptionUtil.decodeFromBase64(request));
+            Integer userId = data.optInt("userId");
+            String email = data.optString("email");
+            User user = userService.getUser(userId);
+            if (!user.getEmail().equals(email)) {
+                response.put("status", "failed");
+                response.put("message", "Unautorized Request");
+                return ResponseUtil.createBadRequestResponse(response.toString());
+            }
+            if (user.getVerifyStatus().equals("Y")) {
+                response.put("status", "failed");
+                response.put("message", "Already Verified");
+                return ResponseUtil.createBadRequestResponse(response.toString());
+            }
+            user.setVerifyStatus("Y");
+            userService.createUser(user);
+            Doctors doctors = doctorsService.getDoctor(user.getDoctorId());
+            doctors.setActive("Y");
+            doctorsService.createDoctor(doctors);
+            response.put("status", "success");
+            response.put("message", "Successfully Verified, Now you easily Login");
+            return ResponseUtil.createOkResponse(response.toString());
+        } catch (Exception ex) {
+            log.error("activateAccount :", ex);
+            response.put("status", "failed");
+            response.put("message", "Something Went Wrong");
+            return ResponseUtil.createInternalServerErrorResponse(response.toString());
+        }
+    }
+
 }
