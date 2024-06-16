@@ -41,23 +41,23 @@ public class UserUtil {
                 return ResponseUtil.createBadRequestResponse(response.toString());
             }
             JSONObject data = new JSONObject(cryptionUtil.decodeFromBase64(request));
-            String name = data.optString("firstName");
+            String name = data.optString("firstName").trim();
             String email = data.optString("userEmail").toLowerCase().trim();
             String phoneNumber = data.optString("phoneNumber").trim();
-            String password = data.optString("userCredential");
-            String phoneCode = data.optString("phoneCode");
+            String password = data.optString("userCredential").trim();
+            String phoneCode = data.optString("phoneCode").trim();
             if (!ValidatorUtil.isValid(name) || !ValidatorUtil.isValid(email) || !ValidatorUtil.isValid(password)) {
                 response.put("status", "failed");
                 response.put("message", "required fields are empty");
                 return ResponseUtil.createBadRequestResponse(response.toString());
             }
-            User user = new User();
-            User alreadyUser = userService.getExistingDoctor(email, RoleConstant.ROLE_DOCTOR);
-            if (ValidatorUtil.isValid(alreadyUser)) {
+            User user = userService.getExistingDoctor(email, RoleConstant.ROLE_DOCTOR);
+            if (ValidatorUtil.isValid(user)) {
                 response.put("status", "failed");
                 response.put("message", "Doctor Already Exists");
                 return ResponseUtil.createBadRequestResponse(response.toString());
             }
+            user = new User();
             user.setRoleId(RoleConstant.ROLE_DOCTOR);
             user.setActive("Y");
             user.setDeleted("N");
